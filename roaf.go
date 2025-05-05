@@ -13,7 +13,7 @@ import (
 )
 
 func main() {
-	// load environment
+	// load environment from .env
 	err := godotenv.Load()
 	if err != nil {
 		panic(err)
@@ -29,7 +29,6 @@ func main() {
 
 	// build the URL
 	url := buildUrl()
-	fmt.Printf("URL: %q\n", url.String())
 
 	// create request
 	req := createGetRequest(url)
@@ -53,7 +52,6 @@ func buildUrl() *url.URL {
 		log.Fatal(err)
 	}
 
-	//base.Path += os.Getenv("ROAF_BASEURI")
 	q := base.Query()
 	q.Set("server", os.Getenv("ROAF_BASEURI"))
 	base.RawQuery = q.Encode()
