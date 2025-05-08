@@ -3,7 +3,6 @@ package main
 import (
 	"fmt"
 	"io"
-	"log"
 	"log/slog"
 	"net/http"
 	"net/url"
@@ -49,7 +48,8 @@ func buildUrl() *url.URL {
 	slog.Debug("Building URL")
 	base, err := url.Parse(os.Getenv("NORKART_PROXY"))
 	if err != nil {
-		log.Fatal(err)
+		slog.Error(err.Error())
+		os.Exit(1)
 	}
 
 	q := base.Query()
@@ -71,7 +71,8 @@ func createGetRequest(uri *url.URL) *http.Request {
 	slog.Debug("Creating request")
 	req, err := http.NewRequest("GET", uri.String(), nil)
 	if err != nil {
-		log.Fatal(err)
+		slog.Error(err.Error())
+		os.Exit(1)
 	}
 
 	req.Header.Add("Kommunenr", os.Getenv("ROAF_KOMMNR"))
@@ -82,13 +83,15 @@ func createGetRequest(uri *url.URL) *http.Request {
 
 func doRequest(req *http.Request) {
 	res, err := http.DefaultClient.Do(req)
-
 	if err != nil {
-		log.Fatal(err)
+		slog.Error(err.Error())
+		os.Exit(1)
 	}
+
 	resBody, err := io.ReadAll(res.Body)
 	if err != nil {
-		log.Fatal(err)
+		slog.Error(err.Error())
+		os.Exit(1)
 	}
 	fmt.Printf("%s\n", resBody)
 }
