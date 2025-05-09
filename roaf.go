@@ -1,15 +1,24 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"io"
 	"log/slog"
 	"net/http"
 	"net/url"
 	"os"
+	"time"
 
 	"github.com/joho/godotenv"
 )
+
+type Fraksjon struct {
+	FraksjonId  int
+	TommeDatoer []string
+}
+
+var datolst []Fraksjon
 
 func main() {
 	// load environment from .env
@@ -32,7 +41,8 @@ func main() {
 	// create request
 	req := createGetRequest(url)
 
-	doRequest(req)
+	res := doRequest(req)
+	parseResponse(res)
 }
 
 func configureLogging(f *os.File) {
@@ -81,7 +91,7 @@ func createGetRequest(uri *url.URL) *http.Request {
 	return req
 }
 
-func doRequest(req *http.Request) {
+func doRequest(req *http.Request) []byte {
 	res, err := http.DefaultClient.Do(req)
 	if err != nil {
 		slog.Error(err.Error())
@@ -94,4 +104,24 @@ func doRequest(req *http.Request) {
 		os.Exit(1)
 	}
 	fmt.Printf("%s\n", resBody)
+	return resBody
+}
+
+func parseResponse(res []byte) {
+	_ = json.Unmarshal(res, &datolst)
+
+	nextrest, err := time.Parse("2006-01-02T15:04:05", datolst[0].TommeDatoer[0])
+	if err != nil {
+		slog.Error(err.Error())
+		os.Exit(1)
+	}
+
+	nextpapp, err := time.Parse("2006-01-02T15:04:05", datolst[1].TommeDatoer[0])
+	if err != nil {
+		slog.Error(err.Error())
+		os.Exit(1)
+	}
+
+	fmt.Printf("Restavfall: %s\n", nextrest.Format("2006-01-02"))
+	fmt.Printf("Papp/Papir: %s\n", nextpapp.Format("2006-01-02"))
 }
