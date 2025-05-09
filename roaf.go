@@ -103,7 +103,6 @@ func doRequest(req *http.Request) []byte {
 		slog.Error(err.Error())
 		os.Exit(1)
 	}
-	fmt.Printf("%s\n", resBody)
 	return resBody
 }
 
