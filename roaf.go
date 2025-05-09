@@ -108,7 +108,11 @@ func doRequest(req *http.Request) []byte {
 }
 
 func parseResponse(res []byte) {
-	_ = json.Unmarshal(res, &datolst)
+	err := json.Unmarshal(res, &datolst)
+	if err != nil {
+		slog.Error(err.Error())
+		os.Exit(1)
+	}
 
 	nextrest, err := time.Parse("2006-01-02T15:04:05", datolst[0].TommeDatoer[0])
 	if err != nil {
