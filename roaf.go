@@ -121,24 +121,29 @@ func doRequest(req *http.Request) []byte {
 }
 
 func parseResponse(res []byte) {
+	const (
+		parseLayout  = "2006-01-02T15:04:05"
+		formatLayout = "2006-01-02"
+	)
+
 	err := json.Unmarshal(res, &datolst)
 	if err != nil {
 		slog.Error(err.Error())
 		os.Exit(1)
 	}
 
-	nextrest, err := time.Parse("2006-01-02T15:04:05", datolst[0].TommeDatoer[0])
+	nextrest, err := time.Parse(parseLayout, datolst[0].TommeDatoer[0])
 	if err != nil {
 		slog.Error(err.Error())
 		os.Exit(1)
 	}
 
-	nextpapp, err := time.Parse("2006-01-02T15:04:05", datolst[1].TommeDatoer[0])
+	nextpapp, err := time.Parse(parseLayout, datolst[1].TommeDatoer[0])
 	if err != nil {
 		slog.Error(err.Error())
 		os.Exit(1)
 	}
 
-	fmt.Printf("Restavfall: %s\n", nextrest.Format("2006-01-02"))
-	fmt.Printf("Papp/Papir: %s\n", nextpapp.Format("2006-01-02"))
+	fmt.Printf("Restavfall: %s\n", nextrest.Format(formatLayout))
+	fmt.Printf("Papp/Papir: %s\n", nextpapp.Format(formatLayout))
 }
