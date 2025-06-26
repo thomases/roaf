@@ -27,6 +27,7 @@ import (
 	"github.com/joho/godotenv"
 )
 
+// a representation of the structure of the data returned from the API
 type Fraksjon struct {
 	FraksjonId  int
 	TommeDatoer []string
@@ -59,6 +60,7 @@ func main() {
 	parseResponse(res)
 }
 
+// configureLogging does what it says on the tin
 func configureLogging(f *os.File) {
 	opts := &slog.HandlerOptions{
 		Level: slog.LevelDebug,
@@ -68,6 +70,7 @@ func configureLogging(f *os.File) {
 	slog.SetDefault(logger)
 }
 
+// buildUrl builds up a correct URL with params and query
 func buildUrl() *url.URL {
 	slog.Debug("Building URL")
 	base, err := url.Parse(os.Getenv("NORKART_PROXY"))
@@ -91,6 +94,8 @@ func buildUrl() *url.URL {
 	return base
 }
 
+// createGetRequest builds and retuns a GET request,
+// with correct headers set
 func createGetRequest(uri *url.URL) *http.Request {
 	slog.Debug("Creating request")
 	req, err := http.NewRequest("GET", uri.String(), nil)
@@ -105,6 +110,7 @@ func createGetRequest(uri *url.URL) *http.Request {
 	return req
 }
 
+// doRequest executes the request and returns the response in a byte array
 func doRequest(req *http.Request) []byte {
 	res, err := http.DefaultClient.Do(req)
 	if err != nil {
@@ -120,6 +126,7 @@ func doRequest(req *http.Request) []byte {
 	return resBody
 }
 
+// parseReponse unmarshals the JSON-response and prints out to stdout
 func parseResponse(res []byte) {
 	const (
 		parseLayout  = "2006-01-02T15:04:05"
