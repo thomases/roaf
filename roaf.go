@@ -35,6 +35,16 @@ type Fraksjon struct {
 
 var datolst []Fraksjon
 
+func (f Fraksjon) String() string {
+	tparsed, err := time.Parse("2006-01-02T15:04:05", f.TommeDatoer[0])
+	if err != nil {
+		fmt.Errorf("Unable to stringify")
+		return ""
+	}
+	return tparsed.Format("2006-01-02")
+}
+
+
 func main() {
 	// load environment from .env
 	err := godotenv.Load()
@@ -139,18 +149,6 @@ func parseResponse(res []byte) {
 		os.Exit(1)
 	}
 
-	nextrest, err := time.Parse(parseLayout, datolst[0].TommeDatoer[0])
-	if err != nil {
-		slog.Error(err.Error())
-		os.Exit(1)
-	}
-
-	nextpapp, err := time.Parse(parseLayout, datolst[1].TommeDatoer[0])
-	if err != nil {
-		slog.Error(err.Error())
-		os.Exit(1)
-	}
-
-	fmt.Printf("Restavfall: %s\n", nextrest.Format(formatLayout))
-	fmt.Printf("Papp/Papir: %s\n", nextpapp.Format(formatLayout))
+	fmt.Printf("Restavfall: %s\n", datolst[0])
+	fmt.Printf("Papp/Papir: %s\n", datolst[1])
 }
