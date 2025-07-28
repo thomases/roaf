@@ -138,11 +138,6 @@ func doRequest(req *http.Request) []byte {
 
 // parseReponse unmarshals the JSON-response and prints out to stdout
 func parseResponse(res []byte) {
-	const (
-		parseLayout  = "2006-01-02T15:04:05"
-		formatLayout = "2006-01-02"
-	)
-
 	err := json.Unmarshal(res, &datolst)
 	if err != nil {
 		slog.Error(err.Error())
