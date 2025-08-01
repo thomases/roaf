@@ -63,11 +63,7 @@ func (f Fraksjon) String() string {
 }
 
 func main() {
-	// load environment from .env
-	err := godotenv.Load()
-	if err != nil {
-		panic(err)
-	}
+	loadEnv()
 
 	logFile, err := os.OpenFile(os.Getenv("ROAF_LOGFILE"), os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
 	if err != nil {
@@ -85,6 +81,26 @@ func main() {
 
 	res := doRequest(req)
 	parseResponse(res)
+}
+
+func loadEnv() {
+	// load environment from an env
+	uhomedir, err := os.UserHomeDir()
+	if err != nil {
+		fmt.Println("Unable to get user homedir")
+	}
+
+	envLocations := []string{uhomedir + "/.roaf", ".roaf", ".env"}
+
+	for _, loc := range envLocations {
+		if _, err := os.Stat(loc); err != nil {
+			continue
+		}
+		err := godotenv.Load()
+		if err != nil {
+			panic(err)
+		}
+	}
 }
 
 // configureLogging does what it says on the tin
