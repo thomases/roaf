@@ -10,13 +10,16 @@ type FraksjonsType int
 const (
 	REST FraksjonsType = iota + 1
 	PAPIR
-	METALL = 17
+	_
+	METALL
+	MATAVFALL = 17
 )
 
 var frakStrings = map[FraksjonsType]string{
-	REST:   "Restavfall",
-	PAPIR:  "Papp/Papir",
-	METALL: "Metall og glass",
+	REST:      "Restavfall",
+	PAPIR:     "Papp/Papir",
+	MATAVFALL: "Matavfall",
+	METALL:    "Metall og glass",
 }
 
 // a representation of the structure of the data returned from the API
