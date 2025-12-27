@@ -3,13 +3,13 @@ Get the next dates for trash and paper pickup from ROAF
 
 This program need a .env file for the following variables:
 
-		ROAF_LOGFILE - name of the logfile to use
-	    NORKART_PROXY - the URL to the norkart proxy ("https://norkartrenovasjon.azurewebsites.net/proxyserver.ashx")
-	    ROAF_BASEURI - URI for the query ("https://komteksky.norkart.no/MinRenovasjon.Api/api/tommekalender/%3F")
-	    ROAF_KOMMNR - kommunenummer (int)
-	    ROAF_GATENAVN - street name (string)
-	    ROAF_HUSNR - house number (string)
-	    ROAF_GATEKODE - street code
+		ROAF_LOGFILE	- name of the logfile to use
+	    NORKART_PROXY	- the URL to the norkart proxy ("https://norkartrenovasjon.azurewebsites.net/proxyserver.ashx")
+	    ROAF_BASEURI	- URI for the query ("https://komteksky.norkart.no/MinRenovasjon.Api/api/tommekalender/%3F")
+	    ROAF_KOMMNR		- kommunenummer (int)
+	    ROAF_GATENAVN	- street name (string)
+	    ROAF_HUSNR		- house number (string)
+	    ROAF_GATEKODE	- street code
 	    ROAF_APPKEY
 */
 package main
@@ -145,6 +145,7 @@ func parseResponse(res []byte) {
 		os.Exit(1)
 	}
 
-	fmt.Printf("%s\n", datolst[0])
-	fmt.Printf("%s\n", datolst[1])
+	for i, _ := range datolst {
+		fmt.Printf("%s\n", datolst[i])
+	}
 }
