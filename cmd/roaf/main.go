@@ -16,6 +16,7 @@ package main
 
 import (
 	"encoding/json"
+	"flag"
 	"fmt"
 	"io"
 	"log/slog"
@@ -29,8 +30,12 @@ import (
 )
 
 var datolst []iroaf.Fraksjon
+var jsonoutput bool
 
 func main() {
+	configureFlags()
+	flag.Parse()
+	
 	loadEnv()
 
 	logFile, err := os.OpenFile(os.Getenv("ROAF_LOGFILE"), os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
@@ -49,6 +54,10 @@ func main() {
 
 	res := doRequest(req)
 	parseResponse(res)
+}
+
+func configureFlags() {
+	flag.BoolVar(&jsonoutput, "j", false, "generate JSON-output")
 }
 
 func loadEnv() {
@@ -145,7 +154,19 @@ func parseResponse(res []byte) {
 		os.Exit(1)
 	}
 
-	for i, _ := range datolst {
-		fmt.Printf("%s\n", datolst[i])
+	if jsonoutput {
+		for i, _ := range datolst {
+			datolst[i].Enrich()
+		}
+		j, err := json.Marshal(datolst)
+		if err != nil {
+			fmt.Errorf("Unable to create JSON: %v", err)
+		} else {
+			fmt.Printf("%s\n", string(j))
+		}
+	} else {
+		for i, _ := range datolst {
+			fmt.Printf("%s\n", datolst[i])
+		}
 	}
 }
